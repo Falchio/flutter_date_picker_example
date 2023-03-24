@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:my_test/date_formatter.dart';
 
 class DatePickerViews extends StatefulWidget {
@@ -135,7 +136,9 @@ class _DatePickerViewsState extends State<DatePickerViews> {
             DateTime? endDate = _tryParseDate(end);
 
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Processing Data: start = ${startDate?.ddMMyyyy()}; end = ${endDate?.ddMMyyyy()}')),
+              SnackBar(
+                  content: Text(
+                      'Processing Data: start = ${startDate?.ddMMyyyy()}; end = ${endDate?.ddMMyyyy()}')),
             );
           }
         },
@@ -145,26 +148,38 @@ class _DatePickerViewsState extends State<DatePickerViews> {
   }
 
   DateTime? _tryParseDate(String text) {
-    try{
-     String pattern ;
-    } catch (e){
+    try {
+      const String dot = '.';
+
+      final List<String> split = text.split(dot);
+      String pattern;
+      pattern = split[0].length > 1 ? 'dd.' : 'd.';
+      pattern = split[1].length > 1 ? '${pattern}MM.' : '${pattern}M.';
+      pattern = split[2].length > 2 ? '${pattern}yyyy' : '${pattern}yy';
+
+      print('incoming = $text; pattern = $pattern');
+
+      final DateFormat dateFormat = DateFormat(pattern);
+
+      return dateFormat.parse(text);
+    } catch (e) {
       print(e);
       return null;
     }
   }
 
-  // List<DateParseHelper> helpers = [
-  //   DateParseHelper(
-  //       regExp: RegExp('^([12][0-9]|3[01]|0?[1-9])\$'),
-  //       pattern: 'ddMMyyyy',
-  //       isAddMonth: true,
-  //       isAddYear: true), // 'd'|'dd'
-  //   DateParseHelper(
-  //       regExp: RegExp('^([12][0-9]|3[01]|0?[1-9])\\.\$'),
-  //       pattern: 'dd.MMyyyy',
-  //       isAddMonth: true,
-  //       isAddYear: true) // 'd.'|'dd.'
-  // ];
+// List<DateParseHelper> helpers = [
+//   DateParseHelper(
+//       regExp: RegExp('^([12][0-9]|3[01]|0?[1-9])\$'),
+//       pattern: 'ddMMyyyy',
+//       isAddMonth: true,
+//       isAddYear: true), // 'd'|'dd'
+//   DateParseHelper(
+//       regExp: RegExp('^([12][0-9]|3[01]|0?[1-9])\\.\$'),
+//       pattern: 'dd.MMyyyy',
+//       isAddMonth: true,
+//       isAddYear: true) // 'd.'|'dd.'
+// ];
 }
 
 // class DateParseHelper {
