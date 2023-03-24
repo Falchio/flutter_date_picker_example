@@ -11,10 +11,10 @@ class DatePickerViews extends StatefulWidget {
 }
 
 class _DatePickerViewsState extends State<DatePickerViews> {
-  DateTimeRange _selectedDateRange =
-      DateTimeRange(start: DateTime.now(), end: DateTime.now());
-  late final TextEditingController _startController = TextEditingController(text: _selectedDateRange.start.ddMMyyyy());
-  late final TextEditingController _endController = TextEditingController(text: _selectedDateRange.end.ddMMyyyy());
+  final TextEditingController _startController =
+      TextEditingController(text: DateTime.now().ddMMyyyy());
+  final TextEditingController _endController =
+      TextEditingController(text: DateTime.now().ddMMyyyy());
 
   final _startDateKey = GlobalKey<FormState>();
   final _endDateKey = GlobalKey<FormState>();
@@ -28,9 +28,9 @@ class _DatePickerViewsState extends State<DatePickerViews> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _editDateWidget(_selectedDateRange.start),
+              _editDateWidget(isStartDate: true),
               _horizontalPadding(),
-              _editDateWidget(_selectedDateRange.end),
+              _editDateWidget(isStartDate: false),
               _horizontalPadding(),
               _selectDateRangeButton()
             ],
@@ -56,8 +56,7 @@ class _DatePickerViewsState extends State<DatePickerViews> {
     );
   }
 
-  Widget _editDateWidget(DateTime dateTime) {
-    final bool isStartDate = identical(_selectedDateRange.start, dateTime);
+  Widget _editDateWidget({required bool isStartDate}) {
     final hint = isStartDate ? 'start DD.MM.YYYY' : 'end DD.MM.YYYY';
     final formKey = isStartDate ? _startDateKey : _endDateKey;
     final controller = isStartDate ? _startController : _endController;
@@ -103,22 +102,18 @@ class _DatePickerViewsState extends State<DatePickerViews> {
   void _datePicker() async {
     final firstTransactionRecordDate = DateTime(2023, 1, 1);
 
-    final DateTimeRange? result = await showDateRangePicker(
+    final DateTimeRange? dateTimeRange = await showDateRangePicker(
       context: context,
       firstDate: firstTransactionRecordDate,
       lastDate: DateTime.now(),
       currentDate: DateTime.now(),
     );
 
-    if (result != null) {
-      setState(() {
-        _selectedDateRange = result;
-        _startController.text = _selectedDateRange.start.ddMMyyyy();
-        _endController.text = _selectedDateRange.end.ddMMyyyy();
-      });
+    if (dateTimeRange != null) {
+      _startController.text = dateTimeRange.start.ddMMyyyy();
+      _endController.text = dateTimeRange.end.ddMMyyyy();
     }
   }
-
 
   Widget _loadDataButton() {
     return Container(
