@@ -80,6 +80,10 @@ class _DatePickerViewsState extends State<DatePickerViews> {
     );
   }
 
+  ///https://regex101.com/r/wg2Mb3/1
+  final RegExp dateRegex = RegExp(
+      '^([12][0-9]|3[01]|0?[1-9])\\.?\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.?\$|^([12][0-9]|3[01]|0?[1-9]).(0?[1-9]|1[012])\\.\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.\\d{0,4}\$');
+
   String? validateDate(String? value) {
     if (value == null || value.isEmpty) {
       return 'Enter date, please';
@@ -88,10 +92,6 @@ class _DatePickerViewsState extends State<DatePickerViews> {
     }
     return null;
   }
-
-  ///https://regex101.com/r/wg2Mb3/1
-  final RegExp dateRegex = RegExp(
-      '^([12][0-9]|3[01]|0?[1-9])\\.?\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.?\$|^([12][0-9]|3[01]|0?[1-9]).(0?[1-9]|1[012])\\.\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.\\d{0,4}\$');
 
   Widget _horizontalPadding() {
     return const Padding(
