@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_test/date_formatter.dart';
-// import 'package:intl/intl.dart';
 
 class DatePickerViews extends StatefulWidget {
   const DatePickerViews({Key? key}) : super(key: key);
@@ -80,9 +79,12 @@ class _DatePickerViewsState extends State<DatePickerViews> {
     );
   }
 
+  ///https://stackoverflow.com/questions/62467842/flutter-textfield-input-validation-for-a-date/62833230#62833230
   ///https://regex101.com/r/wg2Mb3/1
+  // final RegExp dateRegex = RegExp(
+  //     '^([12][0-9]|3[01]|0?[1-9])\\.?\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.?\$|^([12][0-9]|3[01]|0?[1-9]).(0?[1-9]|1[012])\\.\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.\\d{0,4}\$');
   final RegExp dateRegex = RegExp(
-      '^([12][0-9]|3[01]|0?[1-9])\\.?\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.?\$|^([12][0-9]|3[01]|0?[1-9]).(0?[1-9]|1[012])\\.\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.\\d{0,4}\$');
+      '^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.(?<!\\d)(\\d{2}|\\d{4})(?!\\d)\$');
 
   String? validateDate(String? value) {
     if (value == null || value.isEmpty) {
@@ -125,8 +127,15 @@ class _DatePickerViewsState extends State<DatePickerViews> {
               _endDateKey.currentState!.validate()) {
             // If the form is valid, display a snackbar. In the real world,
             // you'd often call a server or save the information in a database.
+
+            String start = _startController.text;
+            String end = _endController.text;
+
+            DateTime? startDate = _tryParseDate(start);
+            DateTime? endDate = _tryParseDate(end);
+
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Processing Data')),
+              SnackBar(content: Text('Processing Data: start = ${startDate?.ddMMyyyy()}; end = ${endDate?.ddMMyyyy()}')),
             );
           }
         },
@@ -134,4 +143,70 @@ class _DatePickerViewsState extends State<DatePickerViews> {
       ),
     );
   }
+
+  DateTime? _tryParseDate(String text) {
+    try{
+     String pattern ;
+    } catch (e){
+      print(e);
+      return null;
+    }
+  }
+
+  // List<DateParseHelper> helpers = [
+  //   DateParseHelper(
+  //       regExp: RegExp('^([12][0-9]|3[01]|0?[1-9])\$'),
+  //       pattern: 'ddMMyyyy',
+  //       isAddMonth: true,
+  //       isAddYear: true), // 'd'|'dd'
+  //   DateParseHelper(
+  //       regExp: RegExp('^([12][0-9]|3[01]|0?[1-9])\\.\$'),
+  //       pattern: 'dd.MMyyyy',
+  //       isAddMonth: true,
+  //       isAddYear: true) // 'd.'|'dd.'
+  // ];
 }
+
+// class DateParseHelper {
+//   final RegExp _regExp;
+//   final String _pattern;
+//   final bool _isAddMonth;
+//   final bool _isAddYear;
+//
+//   DateParseHelper(
+//       {required RegExp regExp,
+//       required String pattern,
+//       required bool isAddMonth,
+//       required bool isAddYear})
+//       : _isAddYear = isAddYear,
+//         _isAddMonth = isAddMonth,
+//         _pattern = pattern,
+//         _regExp = regExp;
+//
+//   bool hasMatch(String text) {
+//     return _regExp.hasMatch(text);
+//   }
+//
+//   DateTime? tryParse(String text) {
+//     final DateTime now = DateTime.now();
+//
+//     String newPattern = ; // как определить исходя из имеющихся RegExp сколько дней в дате? Два или один? Перекрывать все имеющиеся случаи RegExp не сильно хочется.
+//
+//     String adding = _pattern.replaceFirst('dd', '');
+//
+//     final String monthReplacement = _isAddMonth ? now.month.toString() : '';
+//     adding = adding.replaceFirst('MM', monthReplacement);
+//
+//     final String yearReplacement = _isAddYear ? now.year.toString() : '';
+//     adding = adding.replaceFirst('yyyy', yearReplacement);
+//
+//     final DateFormat dateFormat = DateFormat(_pattern);
+//     try {
+//       return dateFormat.parseStrict('$text$adding');
+//     } catch (e) {
+//       print(e);
+//       print('pattern = $_pattern; text date = $text$adding');
+//       return null;
+//     }
+//   }
+// }
