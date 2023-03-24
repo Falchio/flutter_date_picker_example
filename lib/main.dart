@@ -57,10 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: SlidingViewportOnSelection.withSampleData())),
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child:DatePickerViews()
-            )
+            const DatePickerViews()
           ],
         ),
       ),

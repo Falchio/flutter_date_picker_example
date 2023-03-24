@@ -37,30 +37,30 @@ class SlidingViewportOnSelection extends StatelessWidget {
       // Set an initial viewport to demonstrate the sliding viewport behavior on
       // initial chart load.
       domainAxis: charts.OrdinalAxisSpec(
-          viewport: charts.OrdinalViewport('2018', 4)),
+          viewport: charts.OrdinalViewport('2018', 8)),
     );
   }
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<OrdinalSales, String>> _createSampleData() {
     final data = [
-      new OrdinalSales('2014', 5),
-      new OrdinalSales('2015', 25),
-      new OrdinalSales('2016', 100),
-      new OrdinalSales('2017', 75),
-      new OrdinalSales('2018', 33),
-      new OrdinalSales('2019', 80),
-      new OrdinalSales('2020', 21),
-      new OrdinalSales('2021', 77),
-      new OrdinalSales('2022', 8),
-      new OrdinalSales('2023', 12),
-      new OrdinalSales('2024', 42),
-      new OrdinalSales('2025', 70),
-      new OrdinalSales('2026', 77),
-      new OrdinalSales('2027', 55),
-      new OrdinalSales('2028', 19),
-      new OrdinalSales('2029', 66),
-      new OrdinalSales('2030', 27),
+      OrdinalSales('2014', 5),
+      OrdinalSales('2015', 25),
+      OrdinalSales('2016', 100),
+      OrdinalSales('2017', 75),
+      OrdinalSales('2018', 33),
+      OrdinalSales('2019', 80),
+      OrdinalSales('2020', 21),
+      OrdinalSales('2021', 77),
+      OrdinalSales('2022', 8),
+      OrdinalSales('2023', 12),
+      OrdinalSales('2024', 42),
+      OrdinalSales('2025', 70),
+      OrdinalSales('2026', 77),
+      OrdinalSales('2027', 55),
+      OrdinalSales('2028', 19),
+      OrdinalSales('2029', 66),
+      OrdinalSales('2030', 27),
     ];
 
     return [

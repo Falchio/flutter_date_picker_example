@@ -20,40 +20,25 @@ class _DatePickerViewsState extends State<DatePickerViews> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _editDateWidget(_selectedDateRange.start),
-            _horizontalPadding(),
-            _editDateWidget(_selectedDateRange.end),
-            _horizontalPadding(),
-            _selectDateRangeButton()
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _editDateWidget(_selectedDateRange.start),
+              _horizontalPadding(),
+              _editDateWidget(_selectedDateRange.end),
+              _horizontalPadding(),
+              _selectDateRangeButton()
+            ],
+          ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                print('pressed');
-                print(
-                    'validate start date = ${_startDateKey.currentState!.validate()}');
-                //   print(
-                //       'validate start date = ${_endDateKey.currentState!.validate()}');
-                //   // Validate returns true if the form is valid, or false otherwise.
-                //   if (_startDateKey.currentState!.validate() &&
-                //       _endDateKey.currentState!.validate()) {
-                //     // If the form is valid, display a snackbar. In the real world,
-                //     // you'd often call a server or save the information in a database.
-                //     ScaffoldMessenger.of(context).showSnackBar(
-                //       const SnackBar(content: Text('Processing Data')),
-                //     );
-                //   }
-              },
-              child: const Text('Submit'),
-            ),
-          ],
-        )
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            _loadDataButton(),
+          ]),
+        ),
       ],
     );
   }
@@ -64,13 +49,13 @@ class _DatePickerViewsState extends State<DatePickerViews> {
         minHeight: 50,
       ),
       child: ElevatedButton(
-          onPressed: () => _datePicker(), child: const Text('выбрать период')),
+          onPressed: () => _datePicker(), child: const Text('Choice range')),
     );
   }
 
   Widget _editDateWidget(DateTime dateTime) {
     final bool isStartDate = identical(_selectedDateRange.start, dateTime);
-    final hint = isStartDate ? 'Начало периода' : 'Конец периода';
+    final hint = isStartDate ? 'start DD.MM.YYYY' : 'end DD.MM.YYYY';
     final formKey = isStartDate ? _startDateKey : _endDateKey;
     return Form(
       key: formKey,
@@ -92,20 +77,17 @@ class _DatePickerViewsState extends State<DatePickerViews> {
   }
 
   String? validateDate(String? value) {
-    print('incoming value = value');
     if (value == null || value.isEmpty) {
-      print('empty value');
-      return 'Введите дату';
+      return 'Enter date, please';
     } else if (!dateRegex.hasMatch(value)) {
-      print('incorrect value = $value');
-      return 'Некорректный формат даты';
+      return 'Wrong date format';
     }
     return null;
   }
 
-  ///https://regex101.com/r/ITkwVJ/1
+  ///https://regex101.com/r/wg2Mb3/1
   final RegExp dateRegex = RegExp(
-      '^([12][0-9]|3[01]|0?[1-9])\\.?\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.?\$|^([12][0-9]|3[01]|0?[1-9]).(0?[1-9]|1[012])\\.?\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.\\d{0,4}\$');
+      '^([12][0-9]|3[01]|0?[1-9])\\.?\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.?\$|^([12][0-9]|3[01]|0?[1-9]).(0?[1-9]|1[012])\\.\$|^([12][0-9]|3[01]|0?[1-9])\\.(0?[1-9]|1[012])\\.\\d{0,4}\$');
 
   Widget _horizontalPadding() {
     return const Padding(
@@ -131,4 +113,24 @@ class _DatePickerViewsState extends State<DatePickerViews> {
   }
 
   DateTimeRange? get selectedDateRange => _selectedDateRange;
+
+  Widget _loadDataButton() {
+    return Container(
+      constraints: const BoxConstraints(minHeight: 50),
+      child: ElevatedButton(
+        onPressed: () {
+          // Validate returns true if the form is valid, or false otherwise.
+          if (_startDateKey.currentState!.validate() &&
+              _endDateKey.currentState!.validate()) {
+            // If the form is valid, display a snackbar. In the real world,
+            // you'd often call a server or save the information in a database.
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Processing Data')),
+            );
+          }
+        },
+        child: const Text('Submit'),
+      ),
+    );
+  }
 }
