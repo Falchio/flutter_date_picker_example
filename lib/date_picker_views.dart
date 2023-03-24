@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_test/date_formatter.dart';
 // import 'package:intl/intl.dart';
 
 class DatePickerViews extends StatefulWidget {
@@ -12,6 +13,8 @@ class DatePickerViews extends StatefulWidget {
 class _DatePickerViewsState extends State<DatePickerViews> {
   DateTimeRange _selectedDateRange =
       DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  late final TextEditingController _startController = TextEditingController(text: _selectedDateRange.start.ddMMyyyy());
+  late final TextEditingController _endController = TextEditingController(text: _selectedDateRange.end.ddMMyyyy());
 
   final _startDateKey = GlobalKey<FormState>();
   final _endDateKey = GlobalKey<FormState>();
@@ -57,17 +60,19 @@ class _DatePickerViewsState extends State<DatePickerViews> {
     final bool isStartDate = identical(_selectedDateRange.start, dateTime);
     final hint = isStartDate ? 'start DD.MM.YYYY' : 'end DD.MM.YYYY';
     final formKey = isStartDate ? _startDateKey : _endDateKey;
+    final controller = isStartDate ? _startController : _endController;
     return Form(
       key: formKey,
       child: Container(
         constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
         child: TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: validateDate,
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp('[0-9\\.]')),
               LengthLimitingTextInputFormatter(10)
             ],
+            controller: controller,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: validateDate,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
               labelText: hint,
@@ -108,11 +113,12 @@ class _DatePickerViewsState extends State<DatePickerViews> {
     if (result != null) {
       setState(() {
         _selectedDateRange = result;
+        _startController.text = _selectedDateRange.start.ddMMyyyy();
+        _endController.text = _selectedDateRange.end.ddMMyyyy();
       });
     }
   }
 
-  DateTimeRange? get selectedDateRange => _selectedDateRange;
 
   Widget _loadDataButton() {
     return Container(
